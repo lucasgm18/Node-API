@@ -20,6 +20,21 @@ app.get("/outfit", (req, res) => {
     });
 });
 
+app.get("/comments/:id", async (req, res) => {
+    const id = req.params.id;
+    let content;
+
+    try {
+        content = await fs.readFile(`data/comments/${id}.txt`, "utf-8");
+    } catch (err) {
+
+    }
+
+    res.json({
+        content: content
+    });
+});
+
 app.post("/comments", async (req, res) => {
     const id = uuid();
     const content = req.body.content;
@@ -31,7 +46,9 @@ app.post("/comments", async (req, res) => {
    await fs.mkdir("data/comments", { recursive: true});
    await fs.writeFile(`data/comments/${id}.txt`, content);
 
-   res.sendStatus(201);
+   res.status(201).json({
+    id: id
+   }); 
 
 });
 
